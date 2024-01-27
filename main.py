@@ -1,33 +1,29 @@
-def add(x, y):
-    return x + y
+import sqlite3
 
-def subtract(x, y):
-    return x - y
+# Создание подключения к базе данных
+conn = sqlite3.connect('database.db')
+cursor = conn.cursor()
 
-def multiply(x, y):
-    return x * y
+# Создание таблицы классов
+cursor.execute('''CREATE TABLE IF NOT EXISTS classes
+                  (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   name TEXT,
+                   link TEXT,
+                   lfyyst TEXT)''')
 
-def divide(x, y):
-    return x / y
+# Вставка данных в таблицу
+cursor.execute("INSERT INTO classes (name, link, lfyyst) VALUES (?, ?, ?)", ('gismeteo', 'https://www.gismeteo.by/', 'данные1'))
+cursor.execute("INSERT INTO classes (name, link, lfyyst) VALUES (?, ?, ?)", ('Класс 2', 'ссылка2', 'данные2'))
+cursor.execute("INSERT INTO classes (name, link, lfyyst) VALUES (?, ?, ?)", ('Класс 3', 'ссылка3', 'данные3'))
 
-print("Выберите операцию:")
-print("1. Сложение")
-print("2. Вычитание")
-print("3. Умножение")
-print("4. Деление")
+# Получение данных из таблицы
+cursor.execute("SELECT * FROM classes")
+rows = cursor.fetchall()
 
-choice = input("Введите номер операции (1/2/3/4): ")
+# Вывод данных в виде таблицы
+print("ID\tНазвание\tСсылка\t\tДанные")
+for row in rows:
+    print(f"{row[0]}\t{row[1]}\t\t{row[2]}\t{row[3]}")
 
-num1 = float(input("Введите первое число: "))
-num2 = float(input("Введите второе число: "))
-
-if choice == '1':
-    print(num1, "+", num2, "=", add(num1, num2))
-elif choice == '2':
-    print(num1, "-", num2, "=", subtract(num1, num2))
-elif choice == '3':
-    print(num1, "*", num2, "=", multiply(num1, num2))
-elif choice == '4':
-    print(num1, "/", num2, "=", divide(num1, num2))
-else:
-    print("Неверный ввод")
+# Закрытие подключения к базе данных
+conn.close() 
